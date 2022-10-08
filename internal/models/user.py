@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import enum
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.types import DateTime, Text, Enum, Date
@@ -21,7 +22,7 @@ class User(Base):
     name = Column(Text, nullable=False)
     role = Column(Enum(RoleType), default=RoleType.DEVELOPER, nullable=False)
     pet = relationship("NFTItem", back_populates="pet_owner", uselist=False)
-    inventory = relationship("NFTItem", back_populates="nft_owner")
+    inventory = relationship("NFTItem", back_populates="item_owner")
     power = Column(Integer, default=0)
     work_adress = Column(Text, nullable=False)
     temp_power = Column(Integer, default=0)

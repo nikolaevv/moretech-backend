@@ -3,3 +3,4 @@ databases
 fastapi
 uvicorn
 psycopg2-binary
+bcrypt

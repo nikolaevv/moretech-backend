@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.types import DateTime, Text, Enum, Date
 from sqlalchemy.orm import relationship

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import enum
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.types import DateTime, Text, Enum, Date
@@ -20,4 +21,3 @@ class NFTItem(Base):
     pet_owner = relationship("User", back_populates="pet")
     item_owner_id = Column(Integer, ForeignKey("inventory.id"))
     item_owner = relationship("User", back_populates="item")
-    

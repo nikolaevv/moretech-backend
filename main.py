@@ -1,16 +1,9 @@
 from fastapi import FastAPI
-from pkg.db.db import SessionLocal
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+from internal.handlers.handlers import routes
 
 app = FastAPI()
+app.include_router(routes)
 
 @app.get("/")
 async def root():
-    await get_db()
     return {"message": "Hello Bigger Applications!"}
