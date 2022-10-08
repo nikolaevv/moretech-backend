@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from sqlalchemy.orm import Session
-from internal.models.shop_item import Shopitem
+from internal.models.task import Shopitem
 from internal.schemas.schemas import ShopItemCreate
 
 

@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from sqlalchemy.orm import Session
-from internal.models.user import User
+from internal.models.task import User
 from internal.schemas.schemas import UserAuth
 import uuid
 

@@ -1,8 +1,7 @@
 from __future__ import absolute_import
 from pydantic import BaseModel
 from datetime import datetime
-from internal.models.user import RoleType
-from internal.models.nft_item import NFTItemType
+from internal.models.task import RoleType, NFTItemType
 
 # Task schema
 class TaskBase(BaseModel):

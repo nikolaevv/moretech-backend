@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from sqlalchemy.orm import Session
-from internal.models.nft_item import Nftitem
+from internal.models.task import Nftitem
 from internal.schemas.schemas import NFTItemCreate
 
 

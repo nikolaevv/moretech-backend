@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from tkinter import N
 from sqlalchemy.orm import Session
-from internal.models.group import Group
+from internal.models.task import Group
 from internal.schemas.schemas import GroupCreate
 
 

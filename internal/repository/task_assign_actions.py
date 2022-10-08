@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from sqlalchemy.orm import Session
-from internal.models.task_assign import Taskassign
+from internal.models.task import Taskassign
 from internal.schemas.schemas import TaskAssignCreate
 
 
