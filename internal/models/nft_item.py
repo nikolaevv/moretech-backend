@@ -19,5 +19,6 @@ class NFTItem(Base):
     shop_item_id = Column(Integer, ForeignKey("shop_item.id"))
     shop_item = relationship("ShopItem", back_populates="nft_item")
     pet_owner = relationship("User", back_populates="pet")
-    item_owner_id = Column(Integer, ForeignKey("inventory.id"))
-    item_owner = relationship("User", back_populates="item")
+    item_owner_id = Column(Integer, ForeignKey("item_owner.id"))
+    item_owner = relationship("User", back_populates="inventory")
+    
