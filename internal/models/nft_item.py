@@ -16,9 +16,5 @@ class NFTItem(Base):
     name = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
     type = Column(Enum(NFTItemType), default=NFTItemType.ITEM, nullable=False)
-    shop_item_id = Column(Integer, ForeignKey("shop_item.id"))
-    shop_item = relationship("ShopItem", back_populates="nft_item")
-    pet_owner = relationship("User", back_populates="pet")
-    item_owner_id = Column(Integer, ForeignKey("item_owner.id"))
-    item_owner = relationship("User", back_populates="inventory")
+    _id = Column(Integer, ForeignKey('business.id'))
     

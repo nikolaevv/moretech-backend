@@ -13,7 +13,7 @@ from pkg.db.db import SessionLocal, Base, engine
 Base.metadata.create_all(bind=engine)
 
 routes = APIRouter(
-    prefix='/hui'
+    prefix='/'
 )
 
 def get_db():

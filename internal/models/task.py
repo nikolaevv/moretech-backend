@@ -10,3 +10,4 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False)
+    taskassign_id = Column(Integer, ForeignKey('taskassign.id'), nullable=True)
