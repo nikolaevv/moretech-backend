@@ -117,8 +117,9 @@ class TransactionBase(BaseModel):
     sender: User
     receiver: User
     
-class TransactionCreate(TransactionBase):
-    pass
+class TransactionCreate():
+    sender_id: int
+    receiver_id: int
 
 class Transaction(TransactionBase):
     id: int

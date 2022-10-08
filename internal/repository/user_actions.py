@@ -1,6 +1,7 @@
 from __future__ import absolute_import
+from typing import List
 from sqlalchemy.orm import Session
-from internal.models.task import User
+from internal.models.task import User, Group
 from internal.schemas.schemas import UserAuth
 import uuid
 
@@ -17,6 +18,11 @@ def get_pwd_by_login(db: Session, login: str) -> bytes | None:
 
 def get_users(db: Session) -> list[User]:
     return db.query(User).all()
+
+def get_users_by_group(db: Session, id: int) -> List[User]:
+    return db.query(User).filter(
+        User.groups.any(Group.Id == id)
+    )
 
 def get_user_by_id(db: Session, id: int) -> User:
     users = db.query(User).filter(User.id == id)
