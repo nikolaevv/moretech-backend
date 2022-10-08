@@ -40,6 +40,7 @@ class NFTItem(Base):
     __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, nullable=False)
+    transaction_hash = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
     type = Column(Enum(NFTItemType), default=NFTItemType.ITEM, nullable=False)
     shop_item_id = Column(Integer, ForeignKey("shopitem.id"))

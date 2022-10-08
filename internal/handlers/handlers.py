@@ -17,6 +17,7 @@ from internal.repository.task_actions import *
 
 from pkg.db.db import SessionLocal, Base, engine
 from pkg.db.tasks import tasks
+from pkg.blockchain.api import create_nft
 
 Base.metadata.create_all(bind=engine)
 
@@ -48,8 +49,16 @@ def get_shopitem(db: Session = Depends(get_db)) -> None:
     return get_shopitems(db)
 
 @routes.post("/shopItem/{id}/buy", status_code=201)
-def buy_shop_item(id: int, shop_item: ShopItemCreate, db: Session = Depends(get_db)) -> None:
-    create_shopitem(db, shop_item)
+def buy_shop_item(id: int, user_id: str, nf: NFTItemCreate, db: Session = Depends(get_db)) -> None:
+    create_nftitem(db, nf)
+    user = get_user_by_id(user_id)
+    data = create_nft(id, user.public_key)
+
+    nft_item = get_nftitem_by_id(db, id)
+    if nft_item.nft_owner_id == transaction.sender_id:
+        raise HTTPException(status_code=403, detail='You do not have permission for action')
+    nft_item.transaction_hash = data['transactionHash']
+    update_nftitem(db, nft_item)
 
 @routes.get("/nftItem", status_code=200)
 def get_nft_item(user_id: int, db: Session = Depends(get_db)) -> None:
@@ -93,26 +102,25 @@ def create_user_task(user_id: int, db: Session = Depends(get_db)) -> None:
 #admin_routes = APIRouter(
 #    prefix='/add'
 #)
-
-# @admin_routes.post("/user", status_code=201)
-# def create_user(
+#@admin_routes.post("/user", status_code=201)
+#def create_user(
 #     login: str, pwd: str, name: str, gitlab_token: str, work_address: str,
 #     db: Session = Depends(get_db)
-# ):
-#     access_token = str(uuid4())
-#     pwd_hash = str(pwd.encode(encoding = 'UTF-8', errors = 'strict'))
-#     print(pwd_hash)
-#     tokens = create_tokens()
-#     public_key = tokens["publicKey"]
-#     private_key = tokens["privateKey"]
-#     print(public_key)
-#     print(private_key)
-#     user = UserAuth(
-#         login=login, token=access_token, name=name, role=RoleType.DEVELOPER, work_address=work_address,
-#         gitlab_token=gitlab_token, private_key=private_key, public_key=public_key,
-#         password_hash=pwd_hash
-#     )
-#     db.add(user)
-#     db.commit()
-#     db.refresh(user)
-#     return user
+#):
+#    access_token = str(uuid4())
+#    pwd_hash = str(pwd.encode(encoding = 'UTF-8', errors = 'strict'))
+#    print(pwd_hash)
+#    tokens = create_tokens()
+#    public_key = tokens["publicKey"]
+#    private_key = tokens["privateKey"]
+#    print(public_key)
+#    print(private_key)
+#    user = UserAuth(
+#        login=login, token=access_token, name=name, role=RoleType.DEVELOPER, work_address=work_address,
+#        gitlab_token=gitlab_token, private_key=private_key, public_key=public_key,
+#        password_hash=pwd_hash
+#    )
+#    db.add(user)
+#    db.commit()
+#    db.refresh(user)
+#    return user

@@ -12,6 +12,11 @@ def create_tokens():
     r = requests.post('{}/v1/wallets/new'.format(base_url))
     return r.json()
 
+def get_user_by_private_key(db: Session, private_key: str) -> User:
+    users = db.query(User).filter(User.private_key == private_key)
+    if users.count() > 0:
+        return users.first()
+
 def get_user_by_login(db: Session, login: str) -> User | None:
     users = db.query(User).filter(User.login == login)
     if users.count() > 0:
