@@ -13,7 +13,7 @@ from pkg.db.db import SessionLocal, Base, engine
 Base.metadata.create_all(bind=engine)
 
 routes = APIRouter(
-    prefix='/'
+    prefix='/api'
 )
 
 def get_db():
@@ -24,14 +24,17 @@ def get_db():
         db.close()
 
 @routes.post("/auth", status_code=201)
-def auth(login: str, password: str, user: UserAuth, db: Session = Depends(get_db)) -> Dict:
+def auth(login: str, password: str, db: Session = Depends(get_db)):
     user = get_user_by_login(db, login)
+    
     if not user:
         raise HTTPException(status_code=401, detail='User not found')
-    password = bytes(password, 'utf-8')
-    if not bcrypt.checkpw(password, get_pwd_by_login(db, login)):
+    pwd = password.encode(encoding = 'UTF-8', errors = 'strict')
+    cur_pwd = get_pwd_by_login(db, login).encode(encoding = 'UTF-8', errors = 'strict')
+    if not bcrypt.checkpw(pwd, cur_pwd):
         raise HTTPException(status_code=403, detail='Wrong password')
     return auth_user(db, user)
+
 
 @routes.get("/shopitem", status_code=200)
 def get_shopitem(db: Session = Depends(get_db)) -> None:

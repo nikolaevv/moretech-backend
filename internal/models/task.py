@@ -1,10 +1,17 @@
 from __future__ import absolute_import
 import enum
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Table
 from sqlalchemy.types import DateTime, Text, Enum, Date
 from sqlalchemy.orm import relationship
 
 from pkg.db.db import Base
+
+user_groups_table = Table(
+    "user_groups",
+    Base.metadata,
+    Column("group_id", ForeignKey("group.id"), primary_key=True),
+    Column("user_id", ForeignKey("user.id"), primary_key=True),
+)
 
 class Task(Base):
     __tablename__ = "task"
@@ -18,6 +25,9 @@ class Group(Base):
     __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, nullable=False)
+    members = relationship(
+        "User", secondary=user_groups_table, back_populates="groups"
+    )
 
 class NFTItemType(enum.Enum):
     ITEM = "ITEM"
@@ -30,6 +40,11 @@ class NFTItem(Base):
     name = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
     type = Column(Enum(NFTItemType), default=NFTItemType.ITEM, nullable=False)
+    shop_item_id = Column(Integer, ForeignKey("shopitem.id"))
+    shop_item = relationship("ShopItem", back_populates="nft_items")
+    pet_owner = relationship("User", back_populates="pet")
+    nft_owner_id = Column(Integer, ForeignKey("user.id"))
+    nft_owner = relationship("User", back_populates="inventory")
 
 class ShopItem(Base):
     __tablename__ = "shopitem"
@@ -39,6 +54,7 @@ class ShopItem(Base):
     name = Column(Text, nullable=False)
     rarity = Column(Integer, nullable=False)
     description = Column(Text, nullable=False)
+    nft_items = relationship("NFTItem", back_populates="shop_item")
 
 class TaskAssign(Base):
     __tablename__ = "taskassign"
@@ -47,7 +63,7 @@ class TaskAssign(Base):
     done = Column(Boolean, nullable=False)
 
 class Transaction(Base):
-    __tablename__ = "task"
+    __tablename__ = "transaction"
     __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     ended_at = Column(DateTime, nullable=False)
@@ -72,3 +88,9 @@ class User(Base):
     temp_power = Column(Integer, default=0)
     balance = Column(Float, default=0.0)
     gitlab_token = Column(Text, nullable=False)
+    pet = relationship("NFTItem", back_populates="pet_owner", uselist=False)
+    inventory = relationship("NFTItem", back_populates="nft_owner")
+    groups = relationship(
+        "Group", secondary=user_groups_table, back_populates="members"
+    )
+

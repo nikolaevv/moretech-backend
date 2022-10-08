@@ -23,9 +23,9 @@ def get_user_by_id(db: Session, id: int) -> User:
     if users.count() > 0:
         return users.first()
 
-def auth_user(db: Session, user: UserAuth) -> None:
-    db_object = User(token=uuid.uuid4())
-    db.add(db_object)
+def auth_user(db: Session, user: User):
+    user.token = uuid.uuid4()
+    db.add(user)
     db.commit()
-    db.refresh(db_object)
-    return db_object
+    db.refresh(user)
+    return user
