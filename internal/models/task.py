@@ -10,7 +10,7 @@ user_groups_table = Table(
     "user_groups",
     Base.metadata,
     Column("group_id", ForeignKey("group.id"), primary_key=True),
-    Column("user_id", ForeignKey("user.id"), primary_key=True),
+    Column("user_id", ForeignKey("users.id"), primary_key=True),
 )
 
 class Task(Base):
@@ -19,7 +19,7 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False)
-    assigner_id = Column(Integer, ForeignKey("user.id"))
+    assigner_id = Column(Integer, ForeignKey("users.id"))
     assigner = relationship("User", back_populates="tasks")
     
 class Group(Base):
@@ -45,7 +45,7 @@ class NFTItem(Base):
     shop_item_id = Column(Integer, ForeignKey("shopitem.id"))
     shop_item = relationship("ShopItem", back_populates="nft_items")
     pet_owner = relationship("User", back_populates="pet")
-    nft_owner_id = Column(Integer, ForeignKey("user.id"))
+    nft_owner_id = Column(Integer, ForeignKey("users.id"))
     nft_owner = relationship("User", back_populates="inventory")
 
 class ShopItem(Base):
@@ -71,7 +71,7 @@ class RoleType(enum.Enum):
     HR = "HR"
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
     __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     login = Column(Text, nullable=False)
