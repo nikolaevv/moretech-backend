@@ -19,6 +19,8 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False)
+    assigner_id = Column(Integer, ForeignKey("user.id"))
+    assigner = relationship("User", back_populates="tasks")
     
 class Group(Base):
     __tablename__ = "group"
@@ -56,12 +58,6 @@ class ShopItem(Base):
     description = Column(Text, nullable=False)
     nft_items = relationship("NFTItem", back_populates="shop_item")
 
-class TaskAssign(Base):
-    __tablename__ = "taskassign"
-    __table_args__ = {'extend_existing': True}
-    id = Column(Integer, primary_key=True, index=True)
-    done = Column(Boolean, nullable=False)
-
 class Transaction(Base):
     __tablename__ = "transaction"
     __table_args__ = {'extend_existing': True}
@@ -88,8 +84,11 @@ class User(Base):
     temp_power = Column(Integer, default=0)
     balance = Column(Float, default=0.0)
     gitlab_token = Column(Text, nullable=False)
+    public_key = Column(Text, nullable=False)
+    private_key = Column(Text, nullable=False)
     pet = relationship("NFTItem", back_populates="pet_owner", uselist=False)
     inventory = relationship("NFTItem", back_populates="nft_owner")
+    tasks = relationship("Task", back_populates="assigner")
     groups = relationship(
         "Group", secondary=user_groups_table, back_populates="members"
     )

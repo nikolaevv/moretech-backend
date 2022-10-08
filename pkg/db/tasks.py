@@ -1,0 +1,1 @@
+tasks = ['pu', 'pa', 'pi']

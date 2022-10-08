@@ -4,7 +4,13 @@ from sqlalchemy.orm import Session
 from internal.models.task import User, Group
 from internal.schemas.schemas import UserAuth
 import uuid
+import requests
 
+base_url = 'https://hackathon.lsp.team/hk'
+
+def create_tokens():
+    r = requests.post('{}/v1/wallets/new'.format(base_url))
+    return r.json()
 
 def get_user_by_login(db: Session, login: str) -> User | None:
     users = db.query(User).filter(User.login == login)

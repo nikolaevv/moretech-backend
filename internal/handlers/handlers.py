@@ -1,18 +1,22 @@
 from __future__ import absolute_import
 from http.client import HTTPException
+import random
+from uuid import uuid4
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import Dict, List
 import bcrypt
+from datetime import datetime
 
 from internal.schemas.schemas import *
 from internal.repository.shop_item_actions import *
 from internal.repository.user_actions import *
 from internal.repository.transactions import *
 from internal.repository.nft_actions import *
+from internal.repository.task_actions import *
 
 from pkg.db.db import SessionLocal, Base, engine
-
+from pkg.db.tasks import tasks
 
 Base.metadata.create_all(bind=engine)
 
@@ -64,8 +68,8 @@ def transfer_nft_item(id: int, transaction: TransactionCreate, db: Session = Dep
     create_transaction(db, transaction)
 
 @routes.get("/user/{id}", status_code=200)
-def get_user_by_id(id: int, db: Session = Depends(get_db)) -> None:
-    return get_user_by_id(id, db)
+def get_user(id: int, db: Session = Depends(get_db)):
+    return get_user_by_id(db, id)
 
 @routes.get("/user/{id}/transaction", status_code=200)
 def get_user_transaction_by_id(id: int, db: Session = Depends(get_db)) -> None:
@@ -78,3 +82,37 @@ def get_user_by_params(group_id: int, db: Session = Depends(get_db)) -> List[Use
 @routes.get("/stat", status_code=200)
 def get_statistics(db: Session = Depends(get_db)) -> None:
     return {}
+
+@routes.post("/task", status_code=201)
+def create_user_task(user_id: int, db: Session = Depends(get_db)) -> None:
+    task_text = random.choice(tasks)
+    create_task(db, TaskCreate(text=task_text, assigner_id=user_id, created_at=datetime.now()))
+    return {'task': task_text}
+
+
+#admin_routes = APIRouter(
+#    prefix='/add'
+#)
+
+# @admin_routes.post("/user", status_code=201)
+# def create_user(
+#     login: str, pwd: str, name: str, gitlab_token: str, work_address: str,
+#     db: Session = Depends(get_db)
+# ):
+#     access_token = str(uuid4())
+#     pwd_hash = str(pwd.encode(encoding = 'UTF-8', errors = 'strict'))
+#     print(pwd_hash)
+#     tokens = create_tokens()
+#     public_key = tokens["publicKey"]
+#     private_key = tokens["privateKey"]
+#     print(public_key)
+#     print(private_key)
+#     user = UserAuth(
+#         login=login, token=access_token, name=name, role=RoleType.DEVELOPER, work_address=work_address,
+#         gitlab_token=gitlab_token, private_key=private_key, public_key=public_key,
+#         password_hash=pwd_hash
+#     )
+#     db.add(user)
+#     db.commit()
+#     db.refresh(user)
+#     return user

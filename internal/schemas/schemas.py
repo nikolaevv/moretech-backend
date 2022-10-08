@@ -6,10 +6,10 @@ from internal.models.task import RoleType, NFTItemType
 # Task schema
 class TaskBase(BaseModel):
     text: str
-    created_at: datetime = None
+    created_at: datetime
     
 class TaskCreate(TaskBase):
-    pass
+    assigner_id: int
 
 class Task(TaskBase):
     id: int
@@ -66,16 +66,16 @@ class UserBase(BaseModel):
     token: str
     name: str
     role: RoleType = RoleType.DEVELOPER
-    power: int
+    power: int = 0.0
     work_address: str
-    temp_power: int
-    balance: float
+    temp_power: int = 0.0
+    balance: float = 0.0
     gitlab_token: str
-
+    private_key: str
+    public_key: str
 
 class UserAuth(UserBase):
     password_hash: str
-
 
 # User - Group schemas
 class Group(GroupBase):
@@ -84,6 +84,8 @@ class Group(GroupBase):
 
     class Config:
         orm_mode = True
+
+
 
 class User(UserBase):
     id: int
@@ -95,29 +97,13 @@ class User(UserBase):
         orm_mode = True
 
 
-# TaskAssignAssign schema
-class TaskAssignBase(BaseModel):
-    done: bool
-    
-class TaskAssignCreate(TaskAssignBase):
-    pass
-
-class TaskAssign(TaskAssignBase):
-    id: int
-    user_id: User
-    task_id: Task
-
-    class Config:
-        orm_mode = True
-
-
 # Transaction schema
 class TransactionBase(BaseModel):
     ended_at: datetime = None
     sender: User
     receiver: User
     
-class TransactionCreate():
+class TransactionCreate(BaseModel):
     sender_id: int
     receiver_id: int
 
