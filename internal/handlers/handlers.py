@@ -82,7 +82,7 @@ def get_user(id: int, db: Session = Depends(get_db)):
 
 @routes.get("/user/{id}/transaction", status_code=200)
 def get_user_transaction_by_id(id: int, db: Session = Depends(get_db)) -> None:
-    return get_nftitem_by_id(db, id)
+    return get_transactions_by_user_id(db, id)
 
 @routes.get("/user", status_code=200)
 def get_user_by_params(group_id: int, db: Session = Depends(get_db)) -> List[User]:

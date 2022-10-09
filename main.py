@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from internal.handlers.handlers import routes
 from fastapi.middleware.cors import CORSMiddleware
 
+from db_create import *
+
 app = FastAPI()
 
 app.add_middleware(
